@@ -1,15 +1,69 @@
-import { Text, View } from "react-native";
-
+import { View, Image, StyleSheet } from "react-native";
+import Text from "./Text";
+import Row from "./helpers/Row";
+import Column from "./helpers/Column";
+import theme from "./styles/theme";
+import StatColumn from "./StatColumn";
+const styles = StyleSheet.create({
+  container: {
+    padding: 12,
+    backgroundColor: theme.colors.white,
+  },
+  avatarImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    overflow: "hidden",
+    marginRight: 12,
+  },
+  mainColumn: {
+    marginHorizontal: 10,
+    alignItems: "flex-start",
+  },
+  languageBadge: {
+    backgroundColor: theme.colors.primary,
+    padding: 5,
+    borderRadius: 5,
+    overflow: "hidden",
+    marginTop: 10,
+  },
+  numbersRow: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 15,
+  },
+});
 const RepositoryItem = ({ item }) => {
   return (
-    <View>
-      <Text>Full Nmae : ${item.fullName}</Text>
-      <Text>Description : ${item.description}</Text>
-      <Text>Language : ${item.language}</Text>
-      <Text>Stars : ${item.stargazersCount}</Text>
-      <Text>Forks : ${item.forksCount}</Text>
-      <Text>Reviews : ${item.reviewCount}</Text>
-      <Text>Rating : ${item.ratingAverage}</Text>
+    <View style={styles.container}>
+      <Row>
+        <Image
+          style={styles.avatarImage}
+          source={{ uri: item.ownerAvatarUrl }}
+        />
+        <Column style={styles.mainColumn}>
+          <Text fontSize="subheading" fontWeight="bold">
+            {item.fullName}
+          </Text>
+          <Text
+            color="textSecondary"
+            fontSize="subheading"
+            style={{ marginTop: 5, marginRight: 34 }}
+          >
+            {item.description}
+          </Text>
+          <Text fontWeight="bold" color="white" style={styles.languageBadge}>
+            {item.language}
+          </Text>
+        </Column>
+      </Row>
+
+      <Row style={styles.numbersRow}>
+        <StatColumn text="Stars" number={item.stargazersCount} />
+        <StatColumn text="Forks" number={item.forksCount} />
+        <StatColumn text="Reviews" number={item.reviewCount} />
+        <StatColumn text="Rating" number={item.ratingAverage} />
+      </Row>
     </View>
   );
 };

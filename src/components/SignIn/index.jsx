@@ -2,8 +2,11 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import FormikTextInput from "./FormikTextInput";
 import { Pressable, StyleSheet, View } from "react-native";
-import theme from "./styles/theme";
-import Text from "./Text";
+import theme from "../styles/theme";
+import Text from "../helpers/Text";
+import useSignIn from "../../hooks/useSignIn";
+import AuthManager from "../../utils/authStorage";
+import { useState } from "react";
 const styles = StyleSheet.create({
   container: { backgroundColor: theme.colors.white },
   submitButton: {
@@ -32,16 +35,24 @@ const SignInForm = ({ onSubmit }) => {
   );
 };
 const SignIn = () => {
+  const [error,setError] =useState('');
+  const [signIn, result] = useSignIn({setError});
   const initialValues = {
     username: "",
     password: "",
   };
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
+    await signIn({
+      username: values.username,
+      password: values.password,
+    });
+    const {data} =result
+    const authManager =new AuthManager();
+    authManager.setAccessToken(data.authenticate.accessToken);
   };
-
   return (
     <View style={styles.container}>
+    {error !== "" ? <Text>{error.message}</Text> : null }
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}

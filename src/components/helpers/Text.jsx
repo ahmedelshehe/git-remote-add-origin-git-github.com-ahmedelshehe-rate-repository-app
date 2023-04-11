@@ -1,5 +1,5 @@
 import { Text as NativeText, StyleSheet } from "react-native";
-import theme from "./styles/theme";
+import theme from "../styles/theme";
 const styles = StyleSheet.create({
   text: {
     color: theme.colors.textPrimary,

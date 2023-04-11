@@ -1,5 +1,5 @@
-import Text from "./Text";
-import Column from "./helpers/Column";
+import Text from "../helpers/Text";
+import Column from "../helpers/Column";
 const kFormatter = (num) => {
   return Math.abs(num) > 999
     ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"

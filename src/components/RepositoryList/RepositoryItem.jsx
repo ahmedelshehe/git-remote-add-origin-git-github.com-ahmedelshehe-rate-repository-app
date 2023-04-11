@@ -1,8 +1,8 @@
 import { View, Image, StyleSheet } from "react-native";
-import Text from "./Text";
-import Row from "./helpers/Row";
-import Column from "./helpers/Column";
-import theme from "./styles/theme";
+import theme from "../styles/theme";
+import Row from "../helpers/Row";
+import Column from "../helpers/Row";
+import Text from "../helpers/Text";
 import StatColumn from "./StatColumn";
 const styles = StyleSheet.create({
   container: {
@@ -48,7 +48,7 @@ const RepositoryItem = ({ item }) => {
           <Text
             color="textSecondary"
             fontSize="subheading"
-            style={{ marginTop: 5, marginRight: 34 }}
+            style={{ marginTop: 5, marginRight: 50 }}
           >
             {item.description}
           </Text>

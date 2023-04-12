@@ -5,8 +5,8 @@ import { Pressable, StyleSheet, View } from "react-native";
 import theme from "../styles/theme";
 import Text from "../helpers/Text";
 import useSignIn from "../../hooks/useSignIn";
-import AuthManager from "../../utils/authStorage";
 import { useState } from "react";
+import { useNavigate } from "react-router-native";
 const styles = StyleSheet.create({
   container: { backgroundColor: theme.colors.white },
   submitButton: {
@@ -36,23 +36,27 @@ const SignInForm = ({ onSubmit }) => {
 };
 const SignIn = () => {
   const [error,setError] =useState('');
-  const [signIn, result] = useSignIn({setError});
+  const [signIn] = useSignIn({setError});
+  const navigate =useNavigate();
   const initialValues = {
     username: "",
     password: "",
   };
   const onSubmit = async (values) => {
-    await signIn({
+    try {
+      await signIn({
       username: values.username,
       password: values.password,
     });
-    const {data} =result
-    const authManager =new AuthManager();
-    authManager.setAccessToken(data.authenticate.accessToken);
+    navigate('/')
+    } catch (error) {
+      setError(error);
+    }
+    
   };
   return (
     <View style={styles.container}>
-    {error !== "" ? <Text>{error.message}</Text> : null }
+      {error !== "" ? <Text fontSize="subheading" color="primary" style={{marginHorizontal:15,marginTop:5 }}>{error.message}</Text> : null }
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}

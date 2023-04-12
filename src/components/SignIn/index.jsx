@@ -17,53 +17,76 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-const validationSchema = yup.object().shape({
-  username: yup.string().required("Username required"),
-  password: yup.string().required("Password required"),
-});
-const SignInForm = ({ onSubmit }) => {
+
+export const SignInForm = ({ onSubmit, validationSchema, initialValues }) => {
   return (
     <View>
-      <FormikTextInput name="username" placeholder="Username" />
-      <FormikTextInput name="password" placeholder="Password" secureTextEntry />
-      <Pressable onPress={onSubmit} style={styles.submitButton}>
-        <Text fontSize="heading" color="white">
-          Sign in
-        </Text>
-      </Pressable>
+      <Formik
+        initialValues={
+          initialValues ? initialValues : { username: "", password: "" }
+        }
+        onSubmit={onSubmit}
+        validationSchema={validationSchema ? validationSchema : null}
+      >
+        {({ handleSubmit }) => (
+          <>
+            <FormikTextInput name="username" placeholder="Username" />
+            <FormikTextInput
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+            />
+            <Pressable onPress={handleSubmit} style={styles.submitButton}>
+              <Text fontSize="heading" color="white">
+                Sign in
+              </Text>
+            </Pressable>
+          </>
+        )}
+      </Formik>
     </View>
   );
 };
 const SignIn = () => {
-  const [error,setError] =useState('');
-  const [signIn] = useSignIn({setError});
-  const navigate =useNavigate();
+  const validationSchema = yup.object().shape({
+    username: yup.string().required("Username required"),
+    password: yup.string().required("Password required"),
+  });
   const initialValues = {
     username: "",
     password: "",
   };
+  const [error, setError] = useState("");
+  const [signIn] = useSignIn({ setError });
+  const navigate = useNavigate();
+
   const onSubmit = async (values) => {
     try {
       await signIn({
-      username: values.username,
-      password: values.password,
-    });
-    navigate('/')
+        username: values.username,
+        password: values.password,
+      });
+      navigate("/");
     } catch (error) {
       setError(error);
     }
-    
   };
   return (
     <View style={styles.container}>
-      {error !== "" ? <Text fontSize="subheading" color="primary" style={{marginHorizontal:15,marginTop:5 }}>{error.message}</Text> : null }
-      <Formik
-        initialValues={initialValues}
+      {error !== "" ? (
+        <Text
+          fontSize="subheading"
+          color="primary"
+          style={{ marginHorizontal: 15, marginTop: 5 }}
+        >
+          {error.message}
+        </Text>
+      ) : null}
+      <SignInForm
         onSubmit={onSubmit}
         validationSchema={validationSchema}
-      >
-        {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
-      </Formik>
+        initialValues={initialValues}
+      />
     </View>
   );
 };

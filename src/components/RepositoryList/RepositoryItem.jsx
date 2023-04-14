@@ -1,9 +1,10 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Pressable } from "react-native";
 import theme from "../styles/theme";
 import Row from "../helpers/Row";
 import Column from "../helpers/Row";
 import Text from "../helpers/Text";
 import StatColumn from "./StatColumn";
+import { useNavigate } from "react-router-native";
 const styles = StyleSheet.create({
   container: {
     padding: 12,
@@ -34,37 +35,40 @@ const styles = StyleSheet.create({
   },
 });
 const RepositoryItem = ({ item }) => {
+  const navigate = useNavigate();
   return (
-    <View style={styles.container} testID="repositoryItem">
-      <Row>
-        <Image
-          style={styles.avatarImage}
-          source={{ uri: item.ownerAvatarUrl }}
-        />
-        <Column style={styles.mainColumn}>
-          <Text fontSize="subheading" fontWeight="bold">
-            {item.fullName}
-          </Text>
-          <Text
-            color="textSecondary"
-            fontSize="subheading"
-            style={{ marginTop: 5, marginRight: 50 }}
-          >
-            {item.description}
-          </Text>
-          <Text fontWeight="bold" color="white" style={styles.languageBadge}>
-            {item.language}
-          </Text>
-        </Column>
-      </Row>
+    <Pressable onPress={() => navigate(`/${item.id}`)}>
+      <View style={styles.container} testID="repositoryItem">
+        <Row>
+          <Image
+            style={styles.avatarImage}
+            source={{ uri: item.ownerAvatarUrl }}
+          />
+          <Column style={styles.mainColumn}>
+            <Text fontSize="subheading" fontWeight="bold">
+              {item.fullName}
+            </Text>
+            <Text
+              color="textSecondary"
+              fontSize="subheading"
+              style={{ marginTop: 5, marginRight: 50 }}
+            >
+              {item.description}
+            </Text>
+            <Text fontWeight="bold" color="white" style={styles.languageBadge}>
+              {item.language}
+            </Text>
+          </Column>
+        </Row>
 
-      <Row style={styles.numbersRow}>
-        <StatColumn text="Stars" number={item.stargazersCount} />
-        <StatColumn text="Forks" number={item.forksCount} />
-        <StatColumn text="Reviews" number={item.reviewCount} />
-        <StatColumn text="Rating" number={item.ratingAverage} />
-      </Row>
-    </View>
+        <Row style={styles.numbersRow}>
+          <StatColumn text="Stars" number={item.stargazersCount} />
+          <StatColumn text="Forks" number={item.forksCount} />
+          <StatColumn text="Reviews" number={item.reviewCount} />
+          <StatColumn text="Rating" number={item.ratingAverage} />
+        </Row>
+      </View>
+    </Pressable>
   );
 };
 export default RepositoryItem;

@@ -5,6 +5,7 @@ import { Link } from "react-router-native";
 import { useApolloClient, useQuery } from "@apollo/client";
 import { ME } from "../graphql/queries";
 import { useAuthStorage } from "../hooks/useAuthStorage";
+import { useNavigate } from "react-router-native";
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#24292e",
@@ -17,16 +18,17 @@ const styles = StyleSheet.create({
   },
 });
 const AppBar = () => {
-  const authStorage =useAuthStorage()
-  const apolloClient=useApolloClient()
-  const {data,error,loading} = useQuery(ME)
+  const navigate = useNavigate();
+  const authStorage = useAuthStorage();
+  const apolloClient = useApolloClient();
+  const { data, error, loading } = useQuery(ME);
   if (loading) return <Text>Loading</Text>;
   if (error) return <Text>Error</Text>;
-  const {me} =data
-  const handleSignOut = () =>{
-    authStorage.removeAccessToken()
-    apolloClient.resetStore()
-  }
+  const { me } = data;
+  const handleSignOut = () => {
+    authStorage.removeAccessToken();
+    apolloClient.resetStore();
+  };
   return (
     <View style={styles.container}>
       <ScrollView
@@ -42,21 +44,48 @@ const AppBar = () => {
             </Text>
           </Link>
         </Pressable>
-        {
-          me ? 
-          <Pressable style={styles.pressable} onPress={handleSignOut}>
-            <Text color="white" fontSize="subheading" fontWeight="bold">
-              Sign out
-            </Text>
-          </Pressable> :
-          <Pressable style={styles.pressable}>
-          <Link to="/signin">
-            <Text color="white" fontSize="subheading" fontWeight="bold">
-              Sign in
-            </Text>
-          </Link>
-        </Pressable>
-        }
+        {me ? (
+          <>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => navigate("/create-review")}
+            >
+              <Text color="white" fontSize="subheading" fontWeight="bold">
+                Create Review
+              </Text>
+            </Pressable>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => navigate("/my-reviews")}
+            >
+              <Text color="white" fontSize="subheading" fontWeight="bold">
+                My Reviews
+              </Text>
+            </Pressable>
+            <Pressable style={styles.pressable} onPress={handleSignOut}>
+              <Text color="white" fontSize="subheading" fontWeight="bold">
+                Sign out
+              </Text>
+            </Pressable>
+          </>
+        ) : (
+          <>
+            <Pressable style={styles.pressable}>
+              <Link to="/signin">
+                <Text color="white" fontSize="subheading" fontWeight="bold">
+                  Sign in
+                </Text>
+              </Link>
+            </Pressable>
+            <Pressable style={styles.pressable}>
+              <Link to="/signup">
+                <Text color="white" fontSize="subheading" fontWeight="bold">
+                  Sign up
+                </Text>
+              </Link>
+            </Pressable>
+          </>
+        )}
       </ScrollView>
     </View>
   );
